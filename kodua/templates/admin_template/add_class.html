@@ -30,7 +30,7 @@ Add Class
                   <label>Select Department:</label>
                   <select class="form-control" id="department" name="course">
                       {% for department in departments %}
-                        <option value="{{ department.department_name }}">{{ department.department_name }}</option>
+                        <option value="{{ department.alias }}">{{ department.alias.upper }}</option>
                       {% endfor %}
                   </select>
                 </div>
@@ -44,7 +44,7 @@ Add Class
                 </div>
                 <div class="form-group" >
                   <label>Class Name:</label>
-                  <input disabled type="text" class="form-control" id="c_name" name="class_name" placeholder="Enter Index here">
+                  <input  type="text" class="form-control" id="c_name" name="class_name" placeholder="Enter Index here">
                 </div>
                 <div class="form-group">
                   <label>Prefect ID:</label>
@@ -88,23 +88,21 @@ Add Class
     dep = document.getElementById('department').value 
          form = document.getElementById('form').value
         var clas = document.getElementById('c_name')
-        clas.value = dep + ' ' + form
+        clas.value = form.slice(-1, ) + dep
        $('#form').bind("change keyup", function(event){
          var dep, form;
          dep = document.getElementById('department').value 
          form = document.getElementById('form').value
         var clas = document.getElementById('c_name')
-        clas.value = dep + ' ' + form
-        console.log('event changed')
-        console.log(event)
-
+        clas.value = form.slice(-1, ) + dep
+       
        })
        $('#department').bind("change keyup", function(event){
          var dep, form;
          dep = document.getElementById('department').value 
          form = document.getElementById('form').value
         var clas = document.getElementById('c_name')
-        clas.value = dep + ' ' + form
+        clas.value = form.slice(-1, ) + dep
         console.log('event changed')
         console.log(event)
 

@@ -17,9 +17,12 @@ from rest_framework.decorators import api_view
 
 
 def add_class(request):
-    forms = ['Form 1A', 'Form 1B', 'Form 1C', 'Form 2A','Form 2B', 'Form 2C', 'Form 3A', 'Form 3B', 'Form 3C']
-    department = md.Departments.objects.filter(is_general=False)
-    dep1 = md.Classes.objects.filter(department = department[0])
+    forms = ["Form 1", "Form 2", "Form 3"]
+    try:
+        department = md.Departments.objects.filter(is_general=False)
+        dep1 = md.Classes.objects.filter(department = department[0])
+    except:
+        return HttpResponse("You Do not Have Any Departments Uploaded! Add Department First")
     return render(request, 'admin_template/add_class.html', {'departments':department, 'classes':dep1, 'forms':forms})
 
 def add_general_department(request):
@@ -38,28 +41,28 @@ def add_general_department(request):
 def check_class_exist(request):
     import re
     dep = [x for x in md.Departments.objects.all() if x.is_general ]
-    print(dep)
     if request.method == 'POST':
-        clas = request.POST.get('clas')
+        clas = request.POST.get('clas').strip()
         prfct = request.POST.get('prefect')
         data = request.POST.get('data')
         c_p = md.CustomUser.objects.filter(username=prfct)
         clas_in = md.Classes.objects.filter(class_name = clas)
-        clas_form = clas[-2:]
-        if data[-1] != clas[-2]:
-            return HttpResponse('error2')
+        clas_form = clas[0]
+        
         if clas_in:
             return HttpResponse('error')
         elif c_p:
             return HttpResponse('error1')
         prefect = md.CustomUser.objects.create_user(username=prfct, password=prfct, user_type=3)
         prefect.save()
-        departmnt = request.POST.get('data')
-        department = md.Departments.objects.get(department_name = departmnt)
+        alias = request.POST.get('data')
+        department = md.Departments.objects.get(alias = alias)
         form = request.POST.get('form')
         cls = md.Classes()
         cls.class_name = clas 
         cls.class_form = int(clas_form[0])
+        cohort = md.Cohort.objects.get(cohort=int(clas_form[0]))
+        cls.cohort = cohort
         cls.form_data = clas_form[-1]
         cls.prefect = prefect
         cls.save()
@@ -93,9 +96,9 @@ def admin_home(request):
     dept_class_name = []
     departmnt_name  = []
     dept_attendance_stat = []
-
+    c_cohort = md.Cohort.objects.filter(in_school=True)
+    badge = [x.cohort for x in c_cohort]
     for dp in md.Departments.objects.filter(is_general=False):
-        print(dp)
         departmnt_name.append(dp.department_name)
         dept_class_name.append(dp.classes_set.all().count())
         cs = dp.classes_set.all()
@@ -139,14 +142,28 @@ def admin_home(request):
     print(f3_course_list, f3_total_list, f3_present_list)
     cal = md.TermData.objects.filter(is_current =True)[0]
     staff_section_data = []
-    cur_week = md.Section.objects.filter(week=cur_term.week)
-    ls_week = md.Section.objects.filter(week= cur_term.week - 1)
-    for foo in md.Staffs.objects.all():
-        prs_cw = cur_week.filter(instructor = foo, was_present=True).count()
-        p_tal = cur_week.filter(instructor = foo).count()
-        ls_wk = ls_week.filter(instructor = foo, was_present=True).count()
-        l_tal = ls_week.filter(instructor = foo).count()
-        staff_section_data.append([foo,ls_wk, l_tal, prs_cw, p_tal])
+    cohot = [x for x in md.Cohort.objects.filter(in_school=True)]
+    tees = []
+    c_wks = []
+    l_wks=[]
+    for z in range(len(cohot)):
+        for t in md.Staffs.objects.all():
+            tc = t.classes.filter(class_form = cohot[z].cohort)
+            if tc: tees.append(t)
+    for i, z in enumerate(cohot):
+        c_wks.append((md.Section.objects.filter(term=cur_term.term,year = cur_term.year.year, week=z.week),md.Section.objects.filter(week=z.week - 1)))
+    # cur_week = md.Section.objects.filter(week=cur_term.week)
+    # ls_week = md.Section.objects.filter(week= cur_term.week - 1)
+    print(c_wks, 'c w k s')
+    for foo in tees:
+        for s in c_wks:
+            prs_cw = s[0].filter(instructor = foo, was_present=True).count()
+            p_tal = s[0].filter(instructor = foo).count()
+            ls_wk = s[1].filter(instructor = foo, was_present=True).count()
+            l_tal = s[1].filter(instructor = foo).count()
+            if [foo,ls_wk, l_tal, prs_cw, p_tal] not in staff_section_data:
+                staff_section_data.append([foo,ls_wk, l_tal, prs_cw, p_tal])
+    print(staff_section_data, " staff sect data")
     return render(request,"admin_template/admin_home.html",{
         "weekly_section_data":staff_section_data,
         "atnd_present":present, "atnd_absent":absent,
@@ -157,7 +174,7 @@ def admin_home(request):
      "student_name_list":['Andy', 'Derrick'],"attendance_present_list_student":[ 4, 5, 1],
      "attendance_absent_list_student":[4, 3, 2], "calender":cal,"form_2_classes":f2_course_list,
      "form_2_presents":f2_present_list,"form_2_total":f2_total_list,"form_3_classes":f3_course_list,
-     "form_3_presents":f3_present_list,"form_3_total":f3_total_list,
+     "form_3_presents":f3_present_list,"form_3_total":f3_total_list,"badge":badge
      })
 
 def view_staff(request):
@@ -234,12 +251,23 @@ def view_staff_record(request, staff_id):
     return render(request, 'admin_template/view_staff_timetable.html', {'monday':m, 'tuesday':t,'wednesday':w,'thursday':th, 'friday':f, 'last_year':last_year_data, 'terms':terms})
 def update_calender(request):
     if request.method == 'POST':
+    
         cal = md.TermData.objects.all()
         for t in cal:
             t.is_current = False
             t.save()
         data = request.POST
         ##print(data)
+        forms = [int(x[-1]) for x in data if x[:-1]=='form' and data[x] == 'true']
+        cohort_done=[]
+        for c in md.Cohort.objects.all():
+            c.in_school=False
+            c.save() 
+        for d in forms:
+            c = md.Cohort.objects.get(cohort=d)
+            c.in_school=True 
+            c.save()
+        
         n_cal = md.TermData.objects.get_or_create(year =datetime.date(int(data.get('content')), 10,5))
         if not n_cal[1]:
             if n_cal[0].num_weeks >  int(data.get('week')):
@@ -251,7 +279,9 @@ def update_calender(request):
                 week_change = int(data.get('week')) - n_cal[0].num_weeks 
                 for d in range(1,week_change + 1):
                     ns = md.Section.objects.filter(week=1)
+                    
                     for foo in ns:
+                        foo.was_present=False
                         foo.pk = None
                         foo.week = n_cal[0].week + d
                         foo.save()
@@ -259,21 +289,37 @@ def update_calender(request):
                 
         ##print(n_cal)
         # n_cal.year = datetime.date(int(data.get('content')), 10,5)
+        m = ""
+        if n_cal[0].term != data.get('term'):
+            for s in md.Cohort.objects.all():
+                if s.week != n_cal[0].num_weeks:
+                    m+= "Form "
+                    s.lag=True
+                    m += str(s.cohort)
+                    s.save()
+                    cohort_done.append(s.cohort)
+            n_cal[0].term = data.get('term')
+            n_cal[0].num_weeks = int(data.get('week'))
+            n_cal[0].is_current = True
+            n_cal[0].save()
+            return HttpResponse(f"Term is updated but the following Badges have not completed their term,Form {' Form '.join(cohort_done)}, term will be updated once they complete")
+                    
         n_cal[0].term = data.get('term')
         n_cal[0].num_weeks = int(data.get('week'))
         n_cal[0].is_current = True
         n_cal[0].save()
-        return HttpResponse('all good')
+        return HttpResponse('good')
     else:
         return HttpResponse('not authorized')
 
 def view_class(request):
     clas = md.Classes.objects.all()
+    print(clas, 'clas')
     dep_lst = []
     for c in clas:
+        print(c)
         nc = c.department.filter(is_general=False)
         print(nc)
-    
         dep_lst.append([c,nc[0]])
     return render(request, 'admin_template/view_class.html', {'classes':dep_lst})
 
@@ -289,12 +335,8 @@ def add_staff_save(request):
     if request.method != 'POST':
         return HttpResponse('Unauthorized access')
     data = request.POST
-    print(data)
-    forms = [int(x[-1]) for x in data if x[:-1]=='form' and data[x] == 'true']
-    cls = [ md.Classes.objects.filter(class_form=x) for x in forms if   md.Classes.objects.filter(class_form=x)]
-    print("trynna filter user")
+
     user = md.CustomUser.objects.filter(username=data['staff_id'])
-    print(user)
     if user:
         print("user exists")
         messages.error(request, f"Staff with ID {data['staff_id']} already exist")
@@ -302,11 +344,17 @@ def add_staff_save(request):
     print("user filtered")
     user = md.CustomUser.objects.create_user(username = data['staff_id'],password= data['staff_id'], first_name=data['first_name'], last_name=data['last_name'], user_type=2)
     user.save()
+    
     st = md.Staffs.objects.get(admin=user)
-    print("we are here5")
     dep = md.Departments.objects.get(department_name=data['department'])
     st.department=dep
     st.save()
+    forms = [int(x[-1]) for x in data if x[:-1]=='form' and data[x] == 'true']
+    if st.department.is_general:
+        cls = [ md.Classes.objects.filter(class_form=x) for x in forms]
+    else:
+        cls = [ md.Classes.objects.filter(class_form=x, department=st.department) for x in forms]
+   
     for foo in cls:
         print(foo, 'foo')
         st.classes.add(*foo)
@@ -325,8 +373,10 @@ def add_department_save(request):
     if dep:
         messages.error(request, f"{data['department']}  already Exists! ")
         return HttpResponseRedirect("add_department")
-
-    dp = md.Departments.objects.create(department_name=data['department'])
+    k = data['department'].strip().split(" ")
+    if len(k) >1: a = k[0][0] + k[1][0]
+    else:a = k[0][0] + "S"
+    dp = md.Departments.objects.create(department_name=data['department'], alias=a)
     dp.save()
     messages.success(request, "Department Successfully added")
     return HttpResponseRedirect("add_department")
@@ -348,7 +398,8 @@ def add_course_save(request):
     courses = data['courses'].split(",")
     for course in courses:
         course = course.strip()
-        department.course_set.get_or_create(course_name=course.upper())
+        if len(course)> 4:
+            department.course_set.get_or_create(course_name=course.upper())
 
     messages.success(request, "courses added")
     return HttpResponseRedirect("add_course")

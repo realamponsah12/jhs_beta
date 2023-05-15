@@ -92,6 +92,8 @@ def make_status(t_time,s_time,e_time, obj):
     s_time = timedelta(seconds=int(s_time))
     print(e_time.seconds//3600, s_time.seconds//3600)
     over = False 
+    cohort = obj.clas.cohort.in_school
+    print("cohort", cohort)
     hrs = (e_time - s_time).seconds//3600
     s_day = datetime.strptime(str(s_time), "%H:%M:%S")
     print(e_time.seconds//3600, s_time.seconds//3600)
@@ -119,12 +121,17 @@ def make_status(t_time,s_time,e_time, obj):
         status = 0
     print(e_time.seconds//3600, s_time.seconds//3600)
   
-    return [status, s_time,e_time, obj.course.course_name,obj.clas.class_name,obj.id,obj.was_present, obj.in_session, time_yet, over]
+    return [status, s_time,e_time, obj.course.course_name,obj.clas.class_name,obj.id,obj.was_present, obj.in_session, time_yet, over, cohort]
 
 def staff_home(request):
     # ip = get_cordinates(request)
     st = md.Staffs.objects.get(admin=request.user)
-
+    c_lag = []
+    for s in md.Cohort.objects.all():
+        print(s.lag, 'lag')
+        if s.lag:
+            c_lag.append(s)
+    print(c_lag, 's ')
     cur_term = md.TermData.objects.filter(is_current = True)[0]
     tot_sec = md.Section.objects.filter(year=cur_term.year.year, term=cur_term.term, instructor=st).count()
     lst = [
@@ -134,6 +141,11 @@ def staff_home(request):
     else:nt=1
     expired = []
     in_sess = []
+    for z in range(len(c_lag)):
+        tc = st.classes.filter(class_form = c_lag[z].cohort)
+        if tc:
+            print('tc', tc)
+            nt=0
     day = datetime.datetime.now().strftime("%A") 
     tmrw = (datetime.date.today() + datetime.timedelta(days=1)).strftime("%A")
     instructor_section_today = md.Section.objects.filter(year=cur_term.year.year, term=cur_term.term,week=cur_term.week, day=day.lower(), instructor=st)

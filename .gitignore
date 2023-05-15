@@ -1,4 +1,5 @@
 dj39_attend_beta_env/
-kodua/migrations/
-.env
 !kodua/migrations/__init__.py
+kodua/migrations/
+db.sqlite3
+.env

@@ -40,8 +40,39 @@ Home
                         </select>        </div>
                       <span id="error_msg" class="text-red"></span>
                     </div>
+                    <br>
+                    <label style="color:blueviolet" >Badge in school:
+                    {% for b in badge %}
+                     Form {{ b }}
+                  {% endfor %}
+                  <br>
+                  <small>NOTE: it is crucial to select the right badge which is on campus if the badge indicated above is not right, update it</small>
+                </label>
+                    <br>
+                    <label style="color:blueviolet ">Select New Badge:</label>
+                    <div class="form-group clearfix">
+                      <div class="icheck-primary d-inline">
+                        <input type="checkbox" id="checkboxPrimary1">
+                        <label for="checkboxPrimary1">
+                          Form 1
+                        </label>
+                      </div>
+                      <div class="icheck-primary d-inline">
+                        <input type="checkbox" id="checkboxPrimary2">
+                        <label for="checkboxPrimary2">
+                          Form 2
+                        </label>
+                      </div>
+                      <div class="icheck-primary d-inline">
+                        <input type="checkbox" id="checkboxPrimary3">
+                        <label for="checkboxPrimary3">
+                          Form 3
+                        </label>
+                      </div>
+                    </div>
                     <!-- /.card-body -->
                   </div>
+                 
                   <!-- /.card-body -->
                 </div>
               </div>
@@ -270,20 +301,28 @@ Home
 
   function update_cal(year, week, term){
     const resp = confirm("Are you sure you want to update Academic Year Settings? ");
-    console.log(resp)
+    
     if (!resp){
       return
-    }
+    } 
+    var form1 = document.getElementById("checkboxPrimary1").checked;
+    var form2 = document.getElementById("checkboxPrimary2").checked;
+    var form3 = document.getElementById("checkboxPrimary3").checked;
+
     if ( year &&  week){
       $.ajax({
           url:'{% url 'update_calender' %}',
           method:'POST',
           data:{
-            'content': year, week, term, 
+            'content': year, week, term,form1,form2,form3,
             csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
           },
           success: function(resp){
             //do nothing
+          //do nothing
+          if (resp != "good"){
+              alert(resp)
+            }
             location.reload()
           }
       

@@ -1,7 +1,7 @@
 from operator import mod
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save,pre_save
 from django.dispatch import receiver
 from datetime import datetime
 
@@ -31,19 +31,31 @@ class AdminHOD(models.Model):
 
 class Departments(models.Model):
     department_name= models.CharField(max_length=200, null=True, blank=True)
+    alias= models.CharField(max_length=200, null=True, blank=True,unique=True)
     is_general = models.BooleanField(default=False)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
     objects=models.Manager()
-   
+
+
+class Cohort(models.Model):
+    cohort_choices = (
+        (1, "cohort 1"),
+        (2, "cohort 2"),
+        (3, "cohort 3")
+    )
+    week =models.IntegerField(default=1)
+    cohort = models.CharField(default=1,choices=cohort_choices,max_length=10)
+    lag= models.BooleanField(default=False)
+    in_school = models.BooleanField(default=True)
+    
 class Classes(models.Model):
     prefect = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING)
+    cohort = models.ForeignKey(Cohort, on_delete=models.DO_NOTHING, blank=True, null=True)
     class_name = models.CharField(max_length=200, null=True, blank=True)
     department = models.ManyToManyField(Departments)
     clas=((1,"Form 1"),(2,"Form 2"),(3,"Form 3"))
-    clas_data=(("A","A"),("B","B"),("C","C"))
     class_form = models.CharField(default=1,choices=clas,max_length=10)
-    form_data = models.CharField(default=1,choices=clas_data,max_length=10)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
     
@@ -119,13 +131,7 @@ class TotalAtendance(models.Model):
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
     
-   
-# class SectionAttendance(models.Model):
-#     section=models.ForeignKey(Section, on_delete=models.DO_NOTHING)
-#     attendance_count = models.IntegerField(default=0)
-#     is_present = models.BooleanField(default=False)
-#     created_at=models.DateTimeField(auto_now_add=True)
-#     updated_at=models.DateTimeField(auto_now_add=True)
+
 class IssueTracker(models.Model):
     id=models.AutoField(primary_key=True)
     title = models.CharField(max_length=100,blank=True,null=True)
@@ -158,3 +164,7 @@ def save_user_profile(sender,instance,**kwargs):
     if instance.user_type==3:
         pass
         # instance.students.save()
+        
+
+
+       

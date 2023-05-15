@@ -163,8 +163,12 @@ Term:{{cur_term.term}} |  Week:{{ cur_term.week }}
                       <td>
                         {{section.4.capitalize}}
                       </td>
+                      {% if not section.10 %}
+                      <td><span class="badge bg-warning">This badge is not in school</span></td>
+                      {% else %}
                       <td>{% if section.7  %}<button type="button" class="btn btn-outline-primary" id="butt2" onclick="take_attendance({{ section.5 }}, 'Closing')" data-toggle="modal"><span class="badge">close</span></button>{%else%}<button  type="button" class="btn btn-outline-primary" id="butt1" onclick="take_attendance({{ section.5 }}, 'Opening')" data-toggle="modal"><span class="badge">Attend</span></button> {% endif %}</td>        
-                    {% endfor%}
+                    {% endif %}
+                      {% endfor%}
                     {% for section in expired %}
                     <tr>
                       <td>{{ section.1}} - {{ section.2 }}</td>
@@ -172,7 +176,11 @@ Term:{{cur_term.term}} |  Week:{{ cur_term.week }}
                       <td>
                         {{section.4}}
                       </td>
+                      {% if not section.10 %}
+                      <td><span class="badge bg-warning">This badge is not in school</span></td>
+                      {% else %}
                       <td>{% if section.6 and not section.7 %}<span class="badge bg-success">Attended</span>{% elif section.8 %}<span class="badge bg-primary">Upcoming</span>{% elif section.7 and not section.9 %}<button type="button" class="btn btn-outline-primary" id="exp_butt2" onclick="take_attendance({{ section.5 }}, 'Closing')" data-toggle="modal"><span class="badge">close</span></button> {% else %} <span class="badge bg-danger">Absent</span>{% endif %}</td>
+                    {% endif %}
                     </tr>
                     {% endfor%}
                    {% endif %}
@@ -388,7 +396,7 @@ function take_attendance(id, identifier){
 
   // window.navigator.geolocation.getCurrentPosition(function(pos) {
   // console.log(pos); 
-  //   var distnc = distance(pos.coords.longitude, pos.coords.latitude,-0.0087808,6.1000812) 
+  //   var distnc = distance(pos.coords.longitude, pos.coords.latitude,-1.281731,6.9170188) 
     
   //   alert(distnc)
 // })

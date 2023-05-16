@@ -1,0 +1,85 @@
+{% extends 'admin_template/base_template.html' %}
+{% block page_title %}
+Displaying All available Staff
+{% endblock page_title %}
+{% block main_content %}
+
+ <!-- Main content -->
+ <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+       
+          <!-- /.card -->
+          
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Showing results for All Staff Members</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Staff ID</th>
+                  <th>Department</th>
+                  <th>View Record</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for staff in staffs %}
+                <tr>
+                  <td>{{staff.admin.first_name}}</td>
+                  <td>{{staff.admin.last_name}}
+                  </td>
+                  <td>{{staff.admin.username}}</td>
+                  <td>{{ staff.department.department_name }}</td>
+                  
+                  <td><a href="/view_staff_record/{{ staff.id }}" class="btn btn-success">Show History</a></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Staff ID</th>
+                    <th>Department</th>
+                    <th>View Record</th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+{% endblock main_content %}
+
+{% block custom_js %}
+<script>
+    $(function () {
+      $("#example1").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false,
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+      $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+      });
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,494 @@
+{% extends 'admin_template/base_template.html' %}
+{% block page_title %}
+Home
+{% endblock page_title %}
+{% block main_content %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <form>
+          {%csrf_token%}
+        <div class="modal" id="myModal">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Academic Year</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+        
+              <!-- Modal body -->
+              <div class="modal-body" >
+                <div class="card card-success">
+                    
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-4">
+                          <label >Current Year</label>
+                          <input id="year" type="text" value = "{{ calender.year.year }}" class="form-control" placeholder="Year">
+                        </div>
+                        <div class="col-4">
+                          <label >Weeks</label>
+                          <input id="week" type="text" value = "{{ calender.num_weeks }}" class="form-control" placeholder="Weeks">
+                        </div>
+                        <div class="col-4">
+                          <label >Term {{ calender.term}}</label>
+                          <select class="form-control" id="term">
+
+                            {% for i, mack in calender.form_choice %}
+                              <option id = 'opts' value="{{i}}">{{ mack }}</option>
+                            {% endfor %}
+                        </select>        </div>
+                      <span id="error_msg" class="text-red"></span>
+                    </div>
+                    <!-- /.card-body -->
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" onclick="update_cal(document.getElementById('year').value,document.getElementById('week').value,document.getElementById('term').value)" class="btn btn-outline-success btn-block btn-sm"><i class="fa fa-edit"></i>  .Update Year</button>
+              </div>
+            </div>
+            </div>
+          </div>
+        </form>
+          <div class="row">
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{ class_count}}</h3>
+
+                <p>Total Classes</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+              </div>
+              <a href="{% url 'view_class' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{ staff_count }}</h3>
+
+                <p>Total Teachers</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+              </div>
+              <a href="{% url 'view_staff' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>{{ department_count }}</h3>
+
+                <p>Total Departments</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+              </div>
+              <a href="{% url 'view_department' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>{{ attendance_rate }}</h3>
+
+                <p>Overall Attendance Rate</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+          <div class="row">
+              <div class="col-lg-6">
+                <div class="card card-danger">
+                  <div class="card-header">
+                    <h3 class="card-title">Attendance: Present vs Absent  Chart</h3>
+
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+              </div>
+              <div class="col-lg-6">
+                   <div class="card card-success">
+                  <div class="card-header">
+                    <h3 class="card-title">Total Classes in Each Departments</h3>
+
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-lg-12">
+                 <div class="card card-info">
+                  <div class="card-header">
+                    <h3 class="card-title">Departmental Attendance Stats (in %)</h3>
+
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="pieChart3" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+              </div>
+             
+          </div>
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="card card-success">
+                  <div class="card-header">
+                    <h3 class="card-title">Form 3: Classes Absents vs Presents</h3>
+
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart">
+                      <canvas id="barChart1" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="card card-success">
+                  <div class="card-header">
+                    <h3 class="card-title">Form 2: Classes Absents vs Presents</h3>
+
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart">
+                      <canvas id="barChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+           
+              <!-- /.card -->
+              
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Weekly Attendance Monitor Staff</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                  <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                      <th>Staff Name</th>
+                      <th>Last Week (present / Total)</th>
+                      <th>This Week (present / Total)</th>
+                      <th>Performance</th>
+                      
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for week in weekly_section_data %}
+                    <tr>
+                      <td>{{week.0.admin.first_name}} {{week.0.admin.last_name}}</td>
+                      <td>{{week.1}}/{{week.2}}
+                      </td>
+                      
+                      <td>{{ week.3 }}/{{week.4}}</td>
+                      <td>{% if week.1 > week.3  %}<span class="badge bg-danger">Decline</span>{% elif week.1 == week.3 %} <span class="badge bg-primary">Neutral</span> {% else %}<span class="badge bg-success">Improved</span>{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                      <th>Staff Name</th>
+                      <th>Last Week</th>
+                      <th>This Week</th>
+                      <th>Performance</th>
+                    </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+            <!-- /.col -->
+          </div>
+      </div>
+    </section>
+    <!-- /.content -->
+{% endblock main_content %}
+{% block custom_js %}
+<script>
+
+  function update_cal(year, week, term){
+    const resp = confirm("Are you sure you want to update Academic Year Settings? ");
+    console.log(resp)
+    if (!resp){
+      return
+    }
+    if ( year &&  week){
+      $.ajax({
+          url:'{% url 'update_calender' %}',
+          method:'POST',
+          data:{
+            'content': year, week, term, 
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+          },
+          success: function(resp){
+            //do nothing
+            location.reload()
+          }
+      
+    })
+    }
+    else{
+      document.getElementById('error_msg').innerHTML = 'You cant leave a blank space'
+  }
+
+  }
+    $(document).ready(function(){
+          $("#myModal").modal('show');
+          $("#example1").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false,
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+      $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+      });
+            var pieData = {
+                  labels: [
+                      'Present %',
+                      'Absent %'
+                  ],
+                  datasets: [
+                    {
+                      data: [{{ atnd_present}},{{ atnd_absent }}],
+                      backgroundColor : ['#00a65a','#f56954'],
+                    }
+                  ]
+             };
+
+            var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+            var pieOptions     = {
+              maintainAspectRatio : false,
+              responsive : true,
+            }
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            var pieChart = new Chart(pieChartCanvas, {
+              type: 'pie',
+              data: pieData,
+              options: pieOptions
+            });
+
+            //Second Chart for Total Subject in Each Course
+              var department_class={{ department_class|safe }};
+              var course_name_list={{ department_list|safe }};
+              var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+              var donutData= {
+                labels:course_name_list,
+                datasets: [
+                    {
+                      data: department_class,
+                      backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de','#f56954', '#00a65a', '#f39c12', ],
+                    }
+                  ]
+                }
+                var donutOptions     = {
+                  maintainAspectRatio : false,
+                  responsive : true,
+                }
+                //Create pie or douhnut chart
+                // You can switch between pie and douhnut using the method below.
+                var donutChart = new Chart(donutChartCanvas, {
+                  type: 'doughnut',
+                  data: donutData,
+                  options: donutOptions
+                });
+
+
+                //show total student in each course
+                  var deparmental_attendance = {{ departmental_attendance }};
+
+                  var pieData2        = {
+                          labels:course_name_list,
+                          datasets: [
+                            {
+                              data: deparmental_attendance ,
+                              backgroundColor : ['#f56954', '#00a65a','#aa00ff', '#ff3d00',, '#f39c12', '#00c0ef', '#3c8dbc',],
+                            }
+                          ]
+                     };
+
+                    var pieChartCanvas2 = $('#pieChart3').get(0).getContext('2d')
+                    var pieOptions2     = {
+                      maintainAspectRatio : false,
+                      responsive : true,
+                    }
+                    var pieChart = new Chart(pieChartCanvas2, {
+                      type: 'pie',
+                      data: pieData2,
+                      options: pieOptions2
+                    });
+
+                //show total student in each Subject
+             
+
+                        ///Staff Leave vs Attendance Bar Chart
+                        var form_3_present ={{ form_3_presents  }};
+                        var form_3_total ={{ form_3_total }};
+                        var form_3_classes ={{ form_3_classes|safe }};
+                        var barChartData = {
+                          labels  : form_3_classes,
+                          datasets: [
+                            {
+                              label               : 'Total',
+                              backgroundColor     : 'rgba(210, 214, 222, 1)',
+                              borderColor         : 'rgba(210, 214, 222, 1)',
+                              pointRadius         : false,
+                              pointColor          : 'rgba(210, 214, 222, 1)',
+                              pointStrokeColor    : '#c1c7d1',
+                              pointHighlightFill  : '#fff',
+                              pointHighlightStroke: 'rgba(220,220,220,1)',
+                             
+                              data                : form_3_total
+                            },
+                            {
+                              label               : 'Presents',
+                              backgroundColor     : 'rgba(60,141,188,0.9)',
+                              borderColor         : 'rgba(60,141,188,0.8)',
+                              pointRadius          : false,
+                              pointColor          : '#3b8bba',
+                              pointStrokeColor    : 'rgba(60,141,188,1)',
+                              pointHighlightFill  : '#fff',
+                              pointHighlightStroke: 'rgba(60,141,188,1)',
+                              data                : form_3_present
+                            },
+                          ]
+                        }
+                        var barChartCanvas = $('#barChart1').get(0).getContext('2d')
+                        var temp0 = barChartData.datasets[0]
+                        var temp1 = barChartData.datasets[1]
+                        barChartData.datasets[0] = temp1
+                        barChartData.datasets[1] = temp0
+
+                        var barChartOptions = {
+                          responsive              : true,
+                          maintainAspectRatio     : false,
+                          datasetFill             : false
+                        }
+
+                        var barChart = new Chart(barChartCanvas, {
+                          type: 'bar',
+                          data: barChartData,
+                          options: barChartOptions
+                        })
+
+                        //Student Leaves vs Attendance
+                        var form_2_present={{ form_2_presents }};
+                        var form_2_total={{ form_2_total }};
+                        var form_2_classes={{ form_2_classes|safe }};
+                        var barChartData2 = {
+                          labels  : form_2_classes,
+                          datasets: [
+                            {
+                              label               : 'Total',
+                              backgroundColor     : 'rgba(210, 214, 222, 1)',
+                              borderColor         : 'rgba(210, 214, 222, 1)',
+                              pointRadius         : false,
+                              pointColor          : 'rgba(210, 214, 222, 1)',
+                              pointStrokeColor    : '#c1c7d1',
+                              pointHighlightFill  : '#fff',
+                              pointHighlightStroke: 'rgba(220,220,220,1)',
+                              data                : form_2_total
+                            },
+                            {
+                              label               : 'Presents',
+                              backgroundColor     : 'rgba(60,141,188,0.9)',
+                              borderColor         : 'rgba(60,141,188,0.8)',
+                              pointRadius          : false,
+                              pointColor          : '#3b8bba',
+                              pointStrokeColor    : 'rgba(60,141,188,1)',
+                              pointHighlightFill  : '#fff',
+                              pointHighlightStroke: 'rgba(60,141,188,1)',
+                             
+                              data                : form_2_present
+                            },
+                          ]
+                        }
+                        var barChartCanvas2 = $('#barChart2').get(0).getContext('2d')
+                        var temp02 = barChartData2.datasets[0]
+                        var temp12 = barChartData2.datasets[1]
+                        barChartData2.datasets[0] = temp12
+                        barChartData2.datasets[1] = temp02
+
+                        var barChartOptions2 = {
+                          responsive              : true,
+                          maintainAspectRatio     : false,
+                          datasetFill             : false
+                        }
+
+                        var barChart2 = new Chart(barChartCanvas2, {
+                          type: 'bar',
+                          data: barChartData2,
+                          options: barChartOptions2
+                        });
+
+                       
+    });
+</script>
+{% endblock custom_js %}

@@ -1,0 +1,319 @@
+{% extends 'admin_template/base_template.html' %}
+{% block page_title %}
+Staff Timetable
+{% endblock page_title %}
+{% block main_content %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+  <!-- Modal body -->
+            <div class="row" >
+                <div class="col-lg-6">
+                  <div id="ml-accordion">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4 class="card-title w-100">
+                          <a class="d-block  w-100" data-toggle="collapse" href="#ml">
+                            Monday Lessons <small>(click to view)</small>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="ml" class="collapse " data-parent="#ml-accordion">
+                        <div class="card">
+                          
+                          <!-- /.card-header -->
+                          <div class="card-body table-responsive p-0" style="height: 300px;">
+                            <table class="table  table-bordered text-nowrap">
+                              <thead>
+                                <tr>
+                                  <th>ID</th>
+                                  <th>Class</th>
+                                  <th>Course</th>
+                                </tr>
+                              </thead>
+                              <tbody id="m_table">
+                               
+                                {% for day in monday %}
+                                    {% for sec in day %}
+                                    <tr>
+                                        <td>{{sec.id}}</td>
+                                        <td>{{sec.clas.class_name}}</td>
+                                        <td>{{sec.course.course_name}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                           
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- /.card-body -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header">
+                        <h4 class="card-title w-100">
+                          <a class="d-block w-100" data-toggle="collapse" href="#tl">
+                           Tuesday Lessons <small>(click to view)</small>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="tl" class="collapse " data-parent="#ml-accordion">
+                        <div class="card">
+                          
+                          <!-- /.card-header -->
+                          <div class="card-body table-responsive p-0" style="height: 300px;">
+                            <table class="table table-bordered text-nowrap">
+                              <thead>
+                                <tr>
+                                  <th>ID</th>
+                                  <th>Class</th>
+                                  <th>Course</th>
+                                </tr>
+                              </thead>
+                              <tbody id="t_table">
+                                {% for day in tuesday %}
+                                {% for sec in day %}
+                                <tr>
+                                    <td>{{sec.id}}</td>
+                                    <td>{{sec.clas.class_name}}</td>
+                                    <td>{{sec.course.course_name}}</td>
+                                </tr>
+                                {% endfor %}
+                            {% endfor %}
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- /.card-body -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header">
+                        <h4 class="card-title w-100">
+                          <a class="d-block w-100" data-toggle="collapse" href="#wl">
+                            Wednesday Lessons <small>(click to view)</small>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="wl" class="collapse " data-parent="#ml-accordion">
+                        <div class="card">
+                          
+                          <!-- /.card-header -->
+                          <div class="card-body table-responsive p-0" style="height: 300px;">
+                            <table class="table table-bordered text-nowrap">
+                              <thead>
+                                <tr>
+                                  <th>ID</th>
+                                  <th>Class</th>
+                                  <th>Course</th>
+                                </tr>
+                              </thead>
+                              <tbody id="w_table">
+                                {% for day in wednesday %}
+                                {% for sec in day %}
+                                <tr>
+                                    <td>{{sec.id}}</td>
+                                    <td>{{sec.clas.class_name}}</td>
+                                    <td>{{sec.course.course_name}}</td>
+                                </tr>
+                                {% endfor %}
+                            {% endfor %}
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- /.card-body -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header">
+                        <h4 class="card-title w-100">
+                          <a class="d-block w-100" data-toggle="collapse" href="#thl">
+                           Thursday Lessons <small>(click to view)</small>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="thl" class="collapse " data-parent="#ml-accordion">
+                        <div class="card">
+                          
+                          <!-- /.card-header -->
+                          <div class="card-body table-responsive p-0" style="height: 300px;">
+                            <table class="table table-bordered text-nowrap">
+                              <thead>
+                                <tr>
+                                  <th>ID</th>
+                                  <th>Class</th>
+                                  <th>Course</th>
+                                </tr>
+                              </thead>
+                              <tbody id="th_table">
+                                {% for day in thursday %}
+                                {% for sec in day %}
+                                <tr>
+                                    <td>{{sec.id}}</td>
+                                    <td>{{sec.clas.class_name}}</td>
+                                    <td>{{sec.course.course_name}}</td>
+                                </tr>
+                                {% endfor %}
+                            {% endfor %}
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- /.card-body -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header">
+                        <h4 class="card-title w-100">
+                          <a class="d-block w-100" data-toggle="collapse" href="#fl">
+                            Friday Lessons <small>(click to view)</small>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="fl" class="collapse " data-parent="#ml-accordion">
+                        <div class="card">
+                          
+                          <!-- /.card-header -->
+                          <div class="card-body table-responsive p-0" style="height: 300px;">
+                            <table class="table table-bordered text-nowrap">
+                              <thead>
+                                <tr>
+                                  <th>ID</th>
+                                  <th>Class</th>
+                                  <th>Course</th>
+                                </tr>
+                              </thead>
+                              <tbody id="f_table">
+                                {% for day in friday %}
+                                {% for sec in day %}
+                                <tr>
+                                    <td>{{sec.id}}</td>
+                                    <td>{{sec.clas.class_name}}</td>
+                                    <td>{{sec.course.course_name}}</td>
+                                </tr>
+                                {% endfor %}
+                            {% endfor %}
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- /.card-body -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card card-danger">
+                        <div class="card-header">
+                          <h3 class="card-title">Attendance Chart (Last Year)</h3>
+  
+                          <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                          <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                        </div>
+                        <!-- /.card-body -->
+                      </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-striped">
+                          <thead>
+                          <tr>
+                            <th>Term</th>
+                            <th>Total Attendance</th>
+                            <th>Presents</th>
+                            
+                            <th>Attendance PCT</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                         {% for term in terms %}
+                          <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{term.0}}
+                            </td>
+                            <td>{{term.1 }}</td>
+                           
+                            <td>{{ term.3 }}%</td>
+                          </tr>
+                          {% endfor %}
+                          </tbody>
+                          <tfoot>
+                          <tr>
+                            <th>Term</th>
+                            <th>Total Attendance</th>
+                            
+                            <th>Presents</th>
+                          
+                            <th>Attendance PCT</th>
+                             
+                          </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                </div>
+            </div>
+          </div>
+    </section>
+{% endblock main_content %}
+
+{% block custom_js %} 
+<script>
+
+$(function () {
+    $("#example1").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false,
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+      $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+      });
+  'use strict'
+   var pieData  = {
+              labels: [
+                  'ABSENT',
+                  'PRESENT',
+                  'TOTAL'
+              ],
+              datasets: [
+                {
+                
+                  data: {{last_year|safe}},
+
+                  backgroundColor : ['#f56954', '#00a65a','#ffc107'],
+                }
+              ]
+            }
+  var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+            var pieOptions     = {
+              maintainAspectRatio : false,
+              responsive : true,
+            }
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            var pieChart = new Chart(pieChartCanvas, {
+              type: 'pie',
+              data: pieData,
+              options: pieOptions
+            });
+
+});
+
+</script>
+{% endblock %}

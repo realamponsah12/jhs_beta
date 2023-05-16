@@ -1,0 +1,81 @@
+{% extends 'admin_template/base_template.html' %}
+{% block page_title %}
+Displaying all Departments
+{% endblock page_title %}
+{% block main_content %}
+
+ <!-- Main content -->
+ <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+       
+          <!-- /.card -->
+          
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Showing available Departments</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>Department Name</th>
+                  <th>Time Added</th>
+
+                  
+                  
+                </tr>
+                </thead>
+                <tbody>
+                {% for department in departments %}
+                <tr>
+                  <td>{{department.department_name}}</td>
+                  <td>{{department.created_at | timesince}}
+                  </td>
+                  
+                  
+                </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>Department Name</th>
+                    <th>Time Added</th>
+                    
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+{% endblock main_content %}
+
+{% block custom_js %}
+<script>
+    $(function () {
+      $("#example1").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false,
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+      $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+      });
+    });
+  </script>
+{% endblock %}

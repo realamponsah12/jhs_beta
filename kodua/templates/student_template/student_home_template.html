@@ -1,0 +1,445 @@
+{% extends 'student_template/base_template.html' %}
+{% block page_title %}
+Term:{{cur_term.term}} |  Week:{{ cur_term.week }}
+{% endblock page_title %}
+{% block main_content %}
+    <!-- Main content -->
+
+    {% if nt %} 
+    <section class="content">
+      <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-2">
+  
+            </div>
+              <div class="col-md-8">
+            <!-- general form elements -->
+           
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form id="post_form" method="post" action="{% url 'timetable' %}">
+                  {% csrf_token %}
+               
+  
+                  <div class="modal fade" id="modal-sm">
+                    <div class="modal-dialog modal-sm">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title">Empty Timetable Detected</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <p>You are seeing this because, either this is a new term or you haven't set up
+                            your timetable for this term. Set up you timetable now to continue <br>NOTE:
+                          <small class="text-red">if you have already set up timetable for this term or if the previous term 
+                            has not ended, you should not see this. If you see this message contact you administrator right away
+                          </small></p>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary">Set Timetable</button>
+                        </div>
+                      </div>
+                      <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                  </div>
+              </form>
+          
+            <!-- /.card -->
+  
+  
+  
+          </div>
+          </div>
+      </div>
+    </section>
+    {% else %}
+    <section class="content">
+      <div class="container-fluid">
+        <form id="f_forms">
+          {%csrf_token%}
+     
+        <div class="modal" id="myModal">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">My Timetable</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+        
+              <!-- Modal body -->
+              <div class="modal-body" >
+                <div class="card card-success">
+                  <div class="card-header">
+                    <h3 id="mod_title" class="card-title">Opening Attendance</h3>
+                  </div>
+                  <div class="card-body">
+                    <input id="class" class="form-control" type="text" placeholder=".form-control-lg">
+                    <br>
+                    <input id= "course" class="form-control" type="text" placeholder="Default input">
+                    <br>
+                    <input required="true" id="prefect" class="form-control form-control-sm" type="password" placeholder="prefect ID">
+                    <input  id="hiden" class="form-control form-control-sm" type="hidden">
+
+                  </div>
+                 
+                  <!-- /.card-body -->
+                </div>
+              </div>
+             <form>
+              {%csrf_token%}
+              <div class="modal-footer">
+                <button type="button" onclick="save_attendance(document.getElementById('hiden').value,document.getElementById('prefect').value,document.getElementById('course').value)" class="btn btn-outline-success btn-block btn-sm"><i class="fa fa-edit"></i>  .Log attendance</button>
+              </div>
+              <form>
+            </div>
+            </div>
+          </div>
+          <div class="modal" id="myCloseModal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">My Timetable</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+          
+                <!-- Modal body -->
+                <div class="modal-body" >
+                  <div class="card card-success">
+                    <div class="card-header">
+                      <h3  class="card-title">Closing Attendance</h3>
+                    </div>
+                    <div class="card-body">
+                      <input id="c_class" class="form-control" type="text" placeholder=".form-control-lg">
+                      <br>
+                      <input id= "c_course" class="form-control" type="text" placeholder="Default input">
+                      <br>
+                      <input required="true" id="c_prefect" class="form-control form-control-sm" type="password" placeholder="prefect ID">
+                      <input  id="c_hiden" class="form-control form-control-sm" type="hidden">
+  
+                    </div>
+                   
+                    <!-- /.card-body -->
+                  </div>
+                </div>
+               <form>
+                {%csrf_token%}
+                <div class="modal-footer">
+                  <button type="button" onclick="close_attendance(document.getElementById('c_hiden').value,document.getElementById('c_prefect').value,document.getElementById('c_course').value)"  class="btn btn-outline-success btn-block btn-sm" id="c_but"><i class="fa fa-edit"></i>  .Close Attendance</button>
+                </div>
+                <form>
+              </div>
+              </div>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Your Schedule for today</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th >Time</th>
+                      <th>Class</th>
+                      <th>Course</th>
+                      <th style="width: 40px">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% if not in_session and not expired %} 
+                    <td><span class="badge bg-warning">No Classes for today</span></td>
+                    {% else %}
+                    {% for section in in_session %}
+                    <tr>
+                      <td>{{ section.1}} - {{ section.2 }}</td>
+                      <td>{{section.3}}</td>
+                      <td>
+                        {{section.4.capitalize}}
+                      </td>
+                      <td>{% if section.7  %}<button type="button" class="btn btn-outline-primary" id="butt2" onclick="take_attendance({{ section.5 }}, 'Closing')" data-toggle="modal"><span class="badge">close</span></button>{%else%}<button  type="button" class="btn btn-outline-primary" id="butt1" onclick="take_attendance({{ section.5 }}, 'Opening')" data-toggle="modal"><span class="badge">Attend</span></button> {% endif %}</td>        
+                    {% endfor%}
+                    {% for section in expired %}
+                    <tr>
+                      <td>{{ section.1}} - {{ section.2 }}</td>
+                      <td>{{section.3}}</td>
+                      <td>
+                        {{section.4}}
+                      </td>
+                      <td>{% if section.6 and not section.7 %}<span class="badge bg-success">Attended</span>{% elif section.8 %}<span class="badge bg-primary">Upcoming</span>{% elif section.7 and not section.9 %}<button type="button" class="btn btn-outline-primary" id="exp_butt2" onclick="take_attendance({{ section.5 }}, 'Closing')" data-toggle="modal"><span class="badge">close</span></button> {% else %} <span class="badge bg-danger">Absent</span>{% endif %}</td>
+                    </tr>
+                    {% endfor%}
+                   {% endif %}
+                  </tbody>
+                </table>
+              </div>
+            
+            </div>
+            <!-- /.card -->
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Schedule for Tomorrow</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th >ID</th>
+                      <th>Class</th>
+                      <th>Course</th>
+                      <th style="width: 40px">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% if tomorrows %}
+                    {% for section in tomorrows %}
+                    <tr>
+                      <td>{{ section.id }}</td>
+                      <td>{{section.clas.class_name}}</td>
+                      <td>
+                        {{section.course.course_name.capitalize}}
+                      </td>
+                      <td><span class="badge bg-primary">Tomorrow</span></td>        
+                      
+                    {% endfor%}
+                    {%else%}
+                    <td><span class="badge bg-warning">No Classes for tomorrow</span></td>
+                    {%endif%}
+                   
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+             
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col-md-6 -->
+          <div class="col-lg-6">
+            
+            <!-- /.card -->
+
+            <div class="card card-danger">
+                      <div class="card-header">
+                        <h3 class="card-title">Attendance Chart for this term</h3>
+
+                        <div class="card-tools">
+                          <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                          </button>
+                          <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+          </div>
+          <!-- /.col-md-6 -->
+        </div>
+      </form>
+      </div>
+    </section>
+    {% endif %}
+    <!-- /.content -->
+{% endblock main_content %}
+
+
+{% block custom_js %} 
+<script>
+  setTimeout(()=> {
+    document.location.reload();
+  }, 120000);
+  $(function () {
+   var nt = {{ nt }};
+   
+   if (nt){
+    $("#modal-sm").modal('show');
+   }
+
+  'use strict'
+   
+    
+ var ticksStyle = {
+    fontColor: '#495057',
+    fontStyle: 'bold'
+  }
+
+  var mode      = 'index'
+  var intersect = true
+
+  
+  var pieData  = {
+              labels: [
+                  
+                  'PRESENT',
+                  'TOTAL'
+              ],
+              datasets: [
+                {
+                  data:{{ data }},
+                  backgroundColor : [ '#00a65a','#ffc107'],
+                }
+              ]
+            }
+  var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+            var pieOptions     = {
+              maintainAspectRatio : false,
+              responsive : true,
+            }
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            var pieChart = new Chart(pieChartCanvas, {
+              type: 'pie',
+              data: pieData,
+              options: pieOptions
+            });
+
+}); 
+
+function save_attendance(section_id,prefect_id, clas){
+  console.log(section_id, prefect_id)
+  if (! prefect_id){
+    document.getElementById("prefect").style.border = "2px solid red"
+    return
+  }
+  $.ajax({
+    url:'{% url 'log_attendance' %}',
+          method:'POST',
+          data:{
+            'section_id': section_id, prefect_id, clas,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            
+          },
+          success: function(resp){
+           if (resp == 'true'){
+            alert("Opening Attendance Successfully Logged, Close on time")
+            location.reload()
+            return
+           }
+           alert("The Prefect Unique Identifier is incorrect, try again")
+           return
+            
+           
+          }
+        })
+}
+
+function close_attendance(section_id,prefect_id, clas){
+  
+  if (! prefect_id){
+    document.getElementById("c_prefect").style.border = "2px solid red"
+    return
+  }
+  document.querySelector("#c_but").disabled = true;
+  $.ajax({
+    url:'{% url 'close_attendance' %}',
+          method:'POST',
+          data:{
+            'section_id': section_id, prefect_id, clas,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            
+          },
+          success: function(resp){
+           if (resp == 'true'){
+            alert("Attendance Saved") 
+            location.reload() 
+            return 
+           }else if(resp == "NT"){
+            alert("Your Time is not up Yet")
+            location.reload()
+            return
+           }
+           alert("The Prefect Unique Identifier is incorrect, True again")
+           return
+            
+           
+          }
+        })
+}
+function distance(lon1, lat1, lon2, lat2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = (lat2-lat1).toRad();  // Javascript fu
+  var dLon = (lon2-lon1).toRad(); 
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
+          Math.sin(dLon/2) * Math.sin(dLon/2); 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d;
+}
+
+/** Converts numeric degrees to radians */
+if (typeof(Number.prototype.toRad) === "undefined") {
+  Number.prototype.toRad = function() {
+    return this * Math.PI / 180;
+  }
+}
+
+function take_attendance(id, identifier){
+
+  // window.navigator.geolocation.getCurrentPosition(function(pos) {
+  // console.log(pos); 
+  //   var distnc = distance(pos.coords.longitude, pos.coords.latitude,-0.0087808,6.1000812) 
+    
+  //   alert(distnc)
+// })
+
+
+  $.ajax({
+
+    url:'{% url 'attend' %}',
+          method:'POST',
+          data:{
+            'content': id,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            
+          },
+          success: function(resp){
+           
+            
+            if (identifier=="Opening"){
+              butt1 = document.getElementById('butt1');
+            document.getElementById("class").value = JSON.parse(resp)[0]
+            document.getElementById("course").value = JSON.parse(resp)[1]
+            document.getElementById("hiden").value = JSON.parse(resp)[2]
+              butt1.dataset.target = "#myModal"
+              return 
+
+            }
+            close_but = document.getElementById('exp_butt2')
+            document.getElementById("c_class").value = JSON.parse(resp)[0]
+            document.getElementById("c_course").value = JSON.parse(resp)[1]
+            document.getElementById("c_hiden").value = JSON.parse(resp)[2]
+             close_but.dataset.target = "#myCloseModal"
+            
+           
+          }
+  })
+  
+}
+// function take_attendance(cust_val){
+//   alert(cust_val)
+
+//   $.ajax({
+//       url:'{% url 'attend' %}',
+//           method:'GET',
+//           data:{
+//             'content': cust_val,  
+//           },
+//           success: function(resp){
+//             //do nothing
+//             alert('Team Successfully created')
+//           }
+//      })
+// };
+</script>
+{% endblock custom_js %}

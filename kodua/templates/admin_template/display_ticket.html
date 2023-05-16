@@ -1,0 +1,55 @@
+
+{% extends 'admin_template/base_template.html' %}
+{% block page_title %}
+Resolve Issue
+{% endblock page_title %}
+{% block main_content %}
+
+    <!-- Main content -->
+    <section class="content">
+    
+        <div id="msg_cls" class="form-group">
+            {% if messages %}
+              {% for message in messages %}
+              {% if message.tags == 'error' %}
+              <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+              {% endif %}
+              {% if message.tags == 'success' %}
+              <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+              {% endif %}
+              {% endfor %}
+            {% endif %}
+          </div>
+          
+          <form method='post' action="{% url 'resolve' %}">
+            {% csrf_token %}
+            <div class='row'>
+                <div class="col-9 col-sm-flex">
+                 
+                </div>
+                <input type="hidden" name="tkid" value="{{tkid}}">
+                <div class="col-lg-3 ">
+                    <button type="submit" class="btn btn-outline-success btn-block btn-sm"><i class="fa fa-edit"></i>  .Resolved</button></br> </div>
+                </div>
+          <div class='form-group'id="ins_bf" style="display: none;position: relative;" >
+                  
+        </div> 
+        </form>
+        
+    </section>
+    <!-- /.content -->
+{% endblock main_content %}
+{% block custom_js %}
+<script>
+    $(document).ready(function(){
+        const content = `{{ content | safe }}`;
+        
+        $("#ins_bf").summernote('code',content, {
+          'height':250
+        });
+        
+    })
+ 
+</script>
+{% endblock %}
+

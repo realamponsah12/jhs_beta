@@ -1,0 +1,117 @@
+{% extends 'admin_template/base_template.html' %}
+{% block page_title %}
+Add Department
+{% endblock page_title %}
+{% block main_content %}
+
+<section class="content">
+    <div class="container-fluid">
+      <div id="msg_cls" class="form-group">
+        {% if messages %}
+          {% for message in messages %}
+          {% if message.tags == 'error' %}
+          <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+          {% endif %}
+          {% if message.tags == 'success' %}
+          <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+          {% endif %}
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <form id="post_form" method="post" action="{% url 'add_department_save' %}">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-md-2">
+
+          </div>
+            <div class="col-md-8">
+          <!-- general form elements -->
+          <div class="card card-primary" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);">
+            <div class="card-header">
+              <h3 class="card-title">Add Department</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+        
+             
+
+              <div class="card-body">
+                
+               
+                </br>
+                  <div>
+                    <label >Enter Department Name</label>
+                    <input required="true" name="department" type="text" value = "" class="form-control" placeholder="department">
+                  </div>
+                </div>
+                
+                
+                 
+
+              
+              <!-- /.card-body -->
+
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary btn-block">Add Department</button>
+              </div>
+      </form>
+    </div>
+    <div class="container-fluid">
+      <form id="post_form" method="post" action="{% url 'add_general_department' %}">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-md-2">
+
+          </div>
+            <div class="col-md-8">
+          <!-- general form elements -->
+          <div class="card card-warning" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);">
+            <div class="card-header">
+              <h3 class="card-title">Add General Department</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+        
+             
+
+              <div class="card-body collapse">
+                
+               
+                </br>
+                  <div>
+                    <label >Enter General Department Name</label>
+                    <input required="true" name="department" type="text" value = "" class="form-control" placeholder="department">
+                  </div>
+                </div>
+                
+                
+                
+              
+              <!-- /.card-body -->
+
+              <div class="card-footer collapse">
+                <button type="submit" class="btn btn-warning btn-block">Add General Department</button>
+              </div>
+      </form>
+    </div>
+
+          <!-- /.card -->
+
+
+
+        </div>
+        </div>
+    </div>
+  </section>
+  {% endblock %}

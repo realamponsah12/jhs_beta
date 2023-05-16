@@ -1,0 +1,150 @@
+{% extends 'admin_template/base_template.html' %}
+{% block page_title %}
+Add Staff
+{% endblock page_title %}
+{% block main_content %}
+
+  <section class="content">
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-2">
+
+          </div>
+            <div class="col-md-8">
+          <!-- general form elements -->
+          <div class="card card-primary" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);">
+            <div class="card-header">
+              <h3 class="card-title">Add Staff Member</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form id="post_form" method="post" action="{% url 'add_staff_save' %}">
+                {% csrf_token %}
+             
+
+              <div class="card-body">
+                
+                <div class="row">
+                    <div class="col-6">
+                      <label >First Name</label>
+                      <input  required="true" id="first_name" type="text" value = "" class="form-control" placeholder="First name">
+                    </div>
+                    <div class="col-6">
+                      <label >Last Name</label>
+                      <input required="true" id="last_name" type="text" value = "" class="form-control" placeholder="Last Name">
+                    </div>
+                    
+                  </div>
+                </br>
+                <div class="form-group clearfix">
+                  <div class="icheck-primary d-inline">
+                    <input type="checkbox" id="checkboxPrimary1">
+                    <label for="checkboxPrimary1">
+                      Form 1
+                    </label>
+                  </div>
+                  <div class="icheck-primary d-inline">
+                    <input type="checkbox" id="checkboxPrimary2">
+                    <label for="checkboxPrimary2">
+                      Form 2
+                    </label>
+                  </div>
+                  <div class="icheck-primary d-inline">
+                    <input type="checkbox" id="checkboxPrimary3">
+                    <label for="checkboxPrimary3">
+                      Form 3
+                    </label>
+                  </div>
+                </div>
+                <div id="error-msg">
+
+                </div>
+                <div class="form-group">
+                    <label>Select Department:</label>
+                    <select class="form-control" id="department" name="department">
+                        {% for department in departments %}
+                          <option value="{{ department.department_name }}">{{ department.department_name }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                  <div>
+                    <label >Staff ID</label>
+                    <input  required="true" id="staff_id" type="text" value = "" class="form-control" placeholder="Staff ID">
+                  </div>
+                </div>
+                
+                
+                 <div id="msg_cls" class="form-group">
+                    {% if messages %}
+                      {% for message in messages %}
+                      {% if message.tags == 'error' %}
+                      <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                      {% endif %}
+                      {% if message.tags == 'success' %}
+                      <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                      {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                  </div>
+
+              
+              <!-- /.card-body -->
+
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary btn-block">Add Staff Member</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.card -->
+
+
+
+        </div>
+        </div>
+    </div>
+  </section>
+{% endblock %}
+{% block custom_js %}
+<script>
+
+$(function () {
+ 
+  //Initialize Select2 Elements
+  $(document).on('submit','#post_form',function(e){
+    e.preventDefault();
+    var form1 = document.getElementById("checkboxPrimary1").checked;
+    var form2 = document.getElementById("checkboxPrimary2").checked;
+    var form3 = document.getElementById("checkboxPrimary3").checked;
+    var first_name, last_name, staff_id, department;
+    first_name = document.getElementById("first_name").value;
+    last_name = document.getElementById("last_name").value
+    staff_id = document.getElementById("staff_id").value
+    department = document.getElementById("department").value
+    console.log(staff_id, last_name, department, form1, form2, form3) 
+
+    if(!form1 && !form2 && !form3) {
+      console.log("did not find data")
+      erm = document.getElementById("error-msg") 
+      erm.innerHTML = "Please select at least one Form"
+      erm.style.color = "red"
+      return
+    }
+    $.ajax({
+          url:'{% url 'add_staff_save' %}',
+          method:'POST',
+          data:{
+            'first_name': first_name, last_name, staff_id, department, form1,form2,form3,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+          },
+          success: function(resp){
+            
+            location.reload()
+          }
+      
+    })
+
+  });
+})
+  
+</script>
+{% endblock %}

@@ -1,0 +1,80 @@
+
+{% extends 'student_template/base_template.html' %}
+{% block page_title %}
+Fill Portfolio
+{% endblock page_title %}
+{% block main_content %}
+
+    <!-- Main content -->
+    <section class="content">
+    
+        <div id="msg_cls" class="form-group">
+            {% if messages %}
+              {% for message in messages %}
+              {% if message.tags == 'error' %}
+              <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+              {% endif %}
+              {% if message.tags == 'success' %}
+              <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+              {% endif %}
+              {% endfor %}
+            {% endif %}
+          </div>
+         
+          <form method='post' id="post_form">
+            {% csrf_token %}
+            <div class='row'>
+                <div class="col-9 col-sm-flex">
+                    
+                </div>
+                <div class="col-lg-3 ">
+                    <button type="submit" class="btn btn-outline-success btn-block btn-sm"><i class="fa fa-edit"></i>  .Submit Ticket</button></br> </div>
+                </div>
+        <div>
+            <label >Title</label><small> a summarized title about issue<small>(shouldn't be more than 50 Letters)</small></small>
+             <input maxlength=80 required="true" id="title" type="text" value = "" class="form-control" placeholder="Title here">
+        </div>
+        <br>
+          <div class='form-group'id="ins_bf" style="display: none;position: relative;" >
+                  
+        </div> 
+        </form>
+        
+    </section>
+    <!-- /.content -->
+{% endblock main_content %}
+{% block custom_js %}
+<script>
+   
+    $(document).ready(function(){
+        $("#ins_bf").summernote({
+          'height':250
+        });
+        $(document).on('submit','#post_form',function(e){
+      //console.log('preventing default')
+        e.preventDefault();
+        var content = $("#ins_bf").summernote('code')
+        var title = document.getElementById("title").value;
+        const sancont = HtmlSanitizer.SanitizeHtml(content);
+        $.ajax({
+            url:'{% url 'issue_tracker' %}',
+            method:'POST',
+            data:{
+                'title': title, sancont,
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            },
+            error: function(){
+                alert("oops! There was an error! You are probably uploading an image that exceeds size limit Resize the image and try again")
+            },
+            success: function(){
+                window.location.href = "{% url 'tickets' %}"
+            }
+
+        })
+        });
+  });
+
+ 
+</script>
+{% endblock %}
+

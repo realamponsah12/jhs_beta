@@ -1,0 +1,70 @@
+{% extends 'admin_template/base_template.html' %}
+{% block page_title %}
+Add Class
+{% endblock page_title %}
+{% block main_content %}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-2">
+
+          </div>
+            <div class="col-md-8">
+          <!-- general form elements -->
+          <div class="card card-primary" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);">
+            <div class="card-header">
+              <h3 class="card-title">Add Course</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form id="post_form" method="post" action="{% url 'add_course_save' %}">
+                {% csrf_token %}
+             
+
+              <div class="card-body">
+                
+               
+                </br>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Department</label>
+                    <select class="form-control" id="mp1_course" name="department">
+                      {% for department in departments %}
+                        <option value="{{ department.id }}">{{ department.department_name }}</option>
+                      {% endfor %}
+                  </select>                            </div>
+                
+                  <div class="form-group">
+                    <label>Enter all course names in this department separated by (,)</label>
+                    <textarea name = "courses" class="form-control" rows="3" placeholder="Enter ..."></textarea>
+                  </div>
+                 <div id="msg_cls" class="form-group">
+                    {% if messages %}
+                      {% for message in messages %}
+                      {% if message.tags == 'error' %}
+                      <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                      {% endif %}
+                      {% if message.tags == 'success' %}
+                      <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                      {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                  </div>
+
+              
+              <!-- /.card-body -->
+
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary btn-block">Add Courses</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.card -->
+
+
+
+        </div>
+        </div>
+    </div>
+  </section>
+  {% endblock %}

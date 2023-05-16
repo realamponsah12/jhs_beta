@@ -1,0 +1,109 @@
+{% extends 'admin_template/base_template.html' %}
+{% block page_title %}
+Displaying All available Staff
+{% endblock page_title %}
+{% block main_content %}
+
+ <!-- Main content -->
+ <section class="content">
+  <div id="msg_cls" class="form-group">
+    {% if messages %}
+      {% for message in messages %}
+      {% if message.tags == 'error' %}
+      <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+      {% endif %}
+      {% if message.tags == 'success' %}
+      <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+      {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+       
+          <!-- /.card -->
+          
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Showing results for All Staff Members</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>Opened By</th>
+                  <th>Date Opened</th>
+                  <th>Title</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                  
+                </tr>
+                </thead>
+                <tbody>
+                {% for ticket in opened %}
+                <tr>
+                  <td>{{ticket.user.admin.first_name}} {{ticket.user.admin.last_name}}</td>
+                  <td>{{ticket.created_at}}
+                  </td>
+                  <td>{{ ticket.title }}</td>
+                  <td>{% if ticket.is_resolved %}  <span class="badge bg-success">Resolved</span> {% else %} <span class="badge bg-danger">Pending</span>{% endif %}</td>
+                  
+                  <td><a href="/view_ticket/{{ ticket.id }}" class="btn btn-success">Vert</a></td>
+                </tr>
+                {% endfor %}
+                {% for ticket in closed %}
+                <tr>
+                  <td>{{ticket.user.admin.first_name}} {{ticket.user.admin.last_name}}</td>
+                  <td>{{ticket.created_at}}
+                  </td>
+                  <td>{{ ticket.title }}</td>
+                  <td>{% if ticket.is_resolved %}  <span class="badge bg-success">Resolved</span> {% else %} <span class="badge bg-danger">Pending</span>{% endif %}</td>
+                  
+                  <td><a href="/view_ticket/{{ ticket.id }}" class="btn btn-success">Vert</a></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>Opened By</th>
+                  <th>Date Opened</th>
+                  <th>Title</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+{% endblock main_content %}
+
+{% block custom_js %}
+<script>
+    $(function () {
+      $("#example1").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false,
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+      $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+      });
+    });
+  </script>
+{% endblock %}

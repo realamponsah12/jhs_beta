@@ -1,0 +1,1751 @@
+{% extends 'student_template/base_template.html' %}
+{% load static %}
+{% block custom_css %} 
+
+{% endblock custom_css %}
+{% block page_title %}
+Personal Timetable
+{% endblock page_title %}
+{% block main_content %}
+    <!-- Main content -->
+    <section class="content">
+      <form method='post' id="time_table">
+       {%csrf_token%}
+      <div class="container-fluid">  
+        <div class="container">
+          <div class="modal" id="myModal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+          
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">My Timetable</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+          
+                <!-- Modal body -->
+                <div class="modal-body" >
+                  <div id="ml-accordion">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4 class="card-title w-100">
+                          <a class="d-block  w-100" data-toggle="collapse" href="#ml">
+                            Monday Lessons <small>(click to view)</small>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="ml" class="collapse " data-parent="#ml-accordion">
+                        <div class="card">
+                          
+                          <!-- /.card-header -->
+                          <div class="card-body table-responsive p-0" style="height: 300px;">
+                            <table class="table  table-bordered text-nowrap">
+                              <thead>
+                                <tr>
+                                  <th>Time</th>
+                                  <th>Class</th>
+                                  <th>Course</th>
+                                </tr>
+                              </thead>
+                              <tbody id="m_table">
+                                
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- /.card-body -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header">
+                        <h4 class="card-title w-100">
+                          <a class="d-block w-100" data-toggle="collapse" href="#tl">
+                           Tuesday Lessons <small>(click to view)</small>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="tl" class="collapse " data-parent="#ml-accordion">
+                        <div class="card">
+                          
+                          <!-- /.card-header -->
+                          <div class="card-body table-responsive p-0" style="height: 300px;">
+                            <table class="table table-bordered text-nowrap">
+                              <thead>
+                                <tr>
+                                  <th>Time</th>
+                                  <th>Class</th>
+                                  <th>Course</th>
+                                </tr>
+                              </thead>
+                              <tbody id="t_table">
+                                
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- /.card-body -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header">
+                        <h4 class="card-title w-100">
+                          <a class="d-block w-100" data-toggle="collapse" href="#wl">
+                            Wednesday Lessons <small>(click to view)</small>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="wl" class="collapse " data-parent="#ml-accordion">
+                        <div class="card">
+                          
+                          <!-- /.card-header -->
+                          <div class="card-body table-responsive p-0" style="height: 300px;">
+                            <table class="table table-bordered text-nowrap">
+                              <thead>
+                                <tr>
+                                  <th>Time</th>
+                                  <th>Class</th>
+                                  <th>Course</th>
+                                </tr>
+                              </thead>
+                              <tbody id="w_table">
+                                
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- /.card-body -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header">
+                        <h4 class="card-title w-100">
+                          <a class="d-block w-100" data-toggle="collapse" href="#thl">
+                           Thursday Lessons <small>(click to view)</small>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="thl" class="collapse " data-parent="#ml-accordion">
+                        <div class="card">
+                          
+                          <!-- /.card-header -->
+                          <div class="card-body table-responsive p-0" style="height: 300px;">
+                            <table class="table table-bordered text-nowrap">
+                              <thead>
+                                <tr>
+                                  <th>Time</th>
+                                  <th>Class</th>
+                                  <th>Course</th>
+                                </tr>
+                              </thead>
+                              <tbody id="th_table">
+                                
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- /.card-body -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header">
+                        <h4 class="card-title w-100">
+                          <a class="d-block w-100" data-toggle="collapse" href="#fl">
+                            Friday Lessons <small>(click to view)</small>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="fl" class="collapse " data-parent="#ml-accordion">
+                        <div class="card">
+                          
+                          <!-- /.card-header -->
+                          <div class="card-body table-responsive p-0" style="height: 300px;">
+                            <table class="table table-bordered text-nowrap">
+                              <thead>
+                                <tr>
+                                  <th>Time</th>
+                                  <th>Class</th>
+                                  <th>Course</th>
+                                </tr>
+                              </thead>
+                              <tbody id="f_table">
+                                
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- /.card-body -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+          
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                  <button id="crtbut" type="submit" class="btn btn-outline-success btn-block btn-sm"><i class="fa fa-edit"></i>  .Create Timetable</button>
+                </div>
+          
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      <div class="row">
+          <div class="col-md-6">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h1 class="card-title bold">MONDAY  </h1> <small class="ml-2">    Fill your monday slots</small>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                </div>
+              </div>
+            
+              <!-- /.card-header -->
+              <div class="card-body collapse">
+                <!-- we are adding the accordion ID so Bootstrap's collapse plugin detects it -->
+                <div id="monday-accordion">
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#mp1">
+                          Period 1
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="mp1" class="collapse " data-parent="#monday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="mp1_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="mp1_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="mp1_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker1" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='mp1_time' data-target="#mtimepicker1"/>
+                                  <div class="input-group-append" data-target="#mtimepicker1" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#mp2">
+                          period 2
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="mp2" class="collapse " data-parent="#monday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="mp2_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="mp2_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="mp2_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker2" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='mp2_time' data-target="#mtimepicker2"/>
+                                  <div class="input-group-append" data-target="#mtimepicker2" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#mp3">
+                          period 3
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="mp3" class="collapse " data-parent="#monday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="mp3_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="mp3_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="mp3_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker3" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='mp3_time' data-target="#mtimepicker3"/>
+                                  <div class="input-group-append" data-target="#mtimepicker3" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#mp4">
+                          period 4
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="mp4" class="collapse " data-parent="#monday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="mp4_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="mp4_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="mp4_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker4" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='mp4_time' data-target="#mtimepicker4"/>
+                                  <div class="input-group-append" data-target="#mtimepicker4" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#mp5">
+                          period 5
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="mp5" class="collapse " data-parent="#monday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="mp5_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="mp5_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="mp5_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker5" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='mp5_time' data-target="#mtimepicker5"/>
+                                  <div class="input-group-append" data-target="#mtimepicker5" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-6">
+            <div class="card card-success">
+              <div class="card-header">
+                <h1 class="card-title bold">TUESDAY  </h1> <small class="ml-2">    Fill your tuesday slots</small>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body collapse">
+                <!-- we are adding the accordion ID so Bootstrap's collapse plugin detects it -->
+                <div id="tuesday-accordion">
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#tp1">
+                          Period 1
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="tp1" class="collapse " data-parent="#tuesday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="tp1_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="tp1_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="tp1_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker6" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='tp1_time' data-target="#mtimepicker6"/>
+                                  <div class="input-group-append" data-target="#mtimepicker6" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#tp2">
+                          period 2
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="tp2" class="collapse " data-parent="#tuesday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="tp2_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="tp2_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="tp2_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker7" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='tp2_time' data-target="#mtimepicker7"/>
+                                  <div class="input-group-append" data-target="#mtimepicker7" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#tp3">
+                          period 3
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="tp3" class="collapse " data-parent="#tuesday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="tp3_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="tp3_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="tp3_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker8" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='tp3_time' data-target="#mtimepicker8"/>
+                                  <div class="input-group-append" data-target="#mtimepicker8" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#tp4">
+                          period 4
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="tp4" class="collapse " data-parent="#tuesday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="tp4_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="tp4_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="tp4_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker9" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='tp4_time' data-target="#mtimepicker9"/>
+                                  <div class="input-group-append" data-target="#mtimepicker9" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#tp5">
+                          period 5
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="tp5" class="collapse " data-parent="#tuesday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="tp5_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="tp5_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="tp5_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker10" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='tp5_time' data-target="#mtimepicker10"/>
+                                  <div class="input-group-append" data-target="#mtimepicker10" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card card-danger">
+              <div class="card-header">
+                <h1 class="card-title bold">WEDNESDAY </h1> <small class="ml-2">    Fill your wednesday slots</small>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body collapse">
+                <!-- we are adding the accordion ID so Bootstrap's collapse plugin detects it -->
+                <div id="wednesday-accordion">
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#wp1">
+                          Period 1
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="wp1" class="collapse " data-parent="#wednesday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="wp1_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="wp1_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="wp1_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker11" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='wp1_time' data-target="#mtimepicker11"/>
+                                  <div class="input-group-append" data-target="#mtimepicker11" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#wp2">
+                          period 2
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="wp2" class="collapse " data-parent="#wednesday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="wp2_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="wp2_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="wp2_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker12" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='wp2_time' data-target="#mtimepicker12"/>
+                                  <div class="input-group-append" data-target="#mtimepicker12" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#wp3">
+                          period 3
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="wp3" class="collapse " data-parent="#wednesday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="wp3_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="wp3_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="wp3_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker13" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='wp3_time' data-target="#mtimepicker13"/>
+                                  <div class="input-group-append" data-target="#mtimepicker13" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#wp4">
+                          period 4
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="wp4" class="collapse " data-parent="#wednesday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="wp4_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="wp4_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="wp4_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker14" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='wp4_time' data-target="#mtimepicker14"/>
+                                  <div class="input-group-append" data-target="#mtimepicker14" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#wp5">
+                          period 5
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="wp5" class="collapse " data-parent="#wednesday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="wp5_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="wp5_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="wp5_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker15" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='wp5_time' data-target="#mtimepicker15"/>
+                                  <div class="input-group-append" data-target="#mtimepicker15" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-6">
+            <div class="card card-warning">
+              <div class="card-header">
+                <h1 class="card-title bold">THURSDAY  </h1> <small class="ml-2">    Fill your thursday slots</small>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body collapse">
+                <!-- we are adding the accordion ID so Bootstrap's collapse plugin detects it -->
+                <div id="thursday-accordion">
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#thp1">
+                          Period 1
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="thp1" class="collapse " data-parent="#thursday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="thp1_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="thp1_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="thp1_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker16" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='thp1_time' data-target="#mtimepicker16"/>
+                                  <div class="input-group-append" data-target="#mtimepicker16" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#thp2">
+                          period 2
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="thp2" class="collapse " data-parent="#thursday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="thp2_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="thp2_school" name="course">
+                                {% for class in classes %}
+                                <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                              {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="thp2_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker17" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='thp2_time' data-target="#mtimepicker17"/>
+                                  <div class="input-group-append" data-target="#mtimepicker17" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#thp3">
+                          period 3
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="thp3" class="collapse " data-parent="#thursday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="thp3_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="thp3_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="thp3_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker18" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='thp3_time' data-target="#mtimepicker18"/>
+                                  <div class="input-group-append" data-target="#mtimepicker18" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#thp4">
+                          period 4
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="thp4" class="collapse " data-parent="#thursday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="thp4_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="thp4_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="thp4_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker19" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='thp4_time' data-target="#mtimepicker19"/>
+                                  <div class="input-group-append" data-target="#mtimepicker19" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#thp5">
+                          period 5
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="thp5" class="collapse " data-parent="#thursday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="thp5_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="thp5_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="thp5_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker20" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='thp5_time' data-target="#mtimepicker20"/>
+                                  <div class="input-group-append" data-target="#mtimepicker20" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-6">
+            <div class="card  card-primary">
+              <div class="card-header">
+                <h1 class="card-title bold" >FRIDAY  </h1> <small class="ml-2">    Fill your friday slots</small>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="collapse card-body">
+                <!-- we are adding the accordion ID so Bootstrap's collapse plugin detects it -->
+                <div id="friday-accordion">
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#fp1">
+                          Period 1
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="fp1" class="collapse " data-parent="#friday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="fp1_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="fp1_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="fp1_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker21" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='fp1_time' data-target="#mtimepicker21"/>
+                                  <div class="input-group-append" data-target="#mtimepicker21" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#fp2">
+                          period 2
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="fp2" class="collapse " data-parent="#friday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="fp2_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="fp2_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="fp2_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker22" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='fp2_time' data-target="#mtimepicker22"/>
+                                  <div class="input-group-append" data-target="#mtimepicker22" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#fp3">
+                          period 3
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="fp3" class="collapse " data-parent="#friday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="fp3_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="fp3_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="fp3_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker23" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='fp3_time' data-target="#mtimepicker23"/>
+                                  <div class="input-group-append" data-target="#mtimepicker23" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#fp4">
+                          period 4
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="fp4" class="collapse " data-parent="#friday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="fp4_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="fp4_school" name="course">
+                                {% for class in classes %}
+                                  <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="fp4_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker24" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='fp4_time' data-target="#mtimepicker24"/>
+                                  <div class="input-group-append" data-target="#mtimepicker24" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card ">
+                    <div class="card-header">
+                      <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#fp5">
+                          period 5
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="fp5" class="collapse " data-parent="#friday-accordion">
+                      <div class="card-body mc">
+                        <div class="tab-pane text-left fade show active" id="member_1" role="tabpanel" aria-labelledby="member_1">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Course</label>
+                              <select class="form-control" id="fp5_course" name="course">
+                                {% for course in courses %}
+                                  <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Select Class:</label>
+                              <select class="form-control" id="fp5_school" name="course">
+                                {% for class in classes %}
+                                <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                              {% endfor %}
+                            </select>                             </div>
+                            <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Periods</label>
+                            <input type="Number" class="form-control" id="fp5_period" placeholder="Number of Periods">
+                          </div>
+                            <div class="bootstrap-timepicker">
+                              <div class="form-group">
+                                <label>Start Time:</label>
+            
+                                <div class="input-group date" id="mtimepicker25" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input"id='fp5_time' data-target="#mtimepicker25"/>
+                                  <div class="input-group-append" data-target="#mtimepicker25" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              <!-- /.form group -->
+                            </div>
+                             
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+
+        <button type="button" id="butt1" class="btn btn-outline-primary btn-block btn-md" onclick="modal_func()" data-toggle="modal">
+          Next
+        </button>
+      </div>
+      </form>
+    </section>
+
+    <!-- /.content -->
+{% endblock main_content %}
+
+{% block custom_js %}
+<script>
+ 
+ window.onload = function(){
+  var nArray = new Array()
+    for(count = 1; count <=25; count++){
+      //console.log('windows loading')
+      $('#mtimepicker'+count.toString()).datetimepicker({ format: 'LT'});
+          
+    };
+  }
+
+function modal_func(){
+    console.log('modal func called')
+    data = process_data();
+    var arr;
+    arr = new Array();
+    ini = 0;
+//   var info = process_data()
+    for(const [key, value] of Object.entries(data)){
+      var tmp = new Array()
+      ini++
+      
+      for(const [nkey, nvalue] of Object.entries(value)){
+        
+        tmp.push(nvalue)
+      }
+      arr.push(tmp)
+    }
+    var ids = new Array('m_table', 't_table', 'w_table', 'th_table', 'f_table')
+    // console.log(arr)
+   arr.forEach(function(lst, indx){
+     console.log(lst)
+     console.log(indx)
+     console.log('--------------')
+     populate_table(lst, ids[indx])
+   });
+// console.log(info)
+// var modal = document.getElementById("myModal");
+
+// // Get the button that opens the modal
+// var btn = document.getElementById("myBtn");
+
+// // Get the <span> element that closes the modal
+// var span = document.getElementsByClassName("close")[0];
+
+// // When the user clicks the button, open the modal
+//   modal.style.display = "block";
+
+// // When the user clicks on <span> (x), close the modal
+// span.onclick = function() {
+//   modal.style.display = "none";
+// }
+
+// // When the user clicks anywhere outside of the modal, close it
+// window.onclick = function(event) {
+//   if (event.target == modal) {
+//     modal.style.display = "none";
+//   }
+// }
+
+};
+function populate_table(arr,pid){
+
+  var t="";
+    tabl = document.getElementById(pid)
+    tabl.innerHTML = ""
+    
+    
+      Date.prototype.addHours = function(h) {
+          this.setTime(this.getTime() + (h*60*60*1000));
+          return this
+        }
+      for(const foo of arr){
+        
+      if(foo.length > 2){
+        const time = foo[3];
+        if(time.length > 6){
+          var tm = time.slice(0,5).trim() +':00'
+        }else{ var tm = time.slice(0,4).trim() + '00'}
+       
+        const start_time = new Date('August 19, 1975 '+ tm)
+        const stop_time =start_time.addHours(foo[2]).toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'})
+        
+        
+       var tr = "<tr>";
+        tr += "<td>" + time+" - "+stop_time+ "</td>";
+        tr += "<td>" + foo[1] + "</td>";
+        tr += "<td>" + foo[0] + "</td>";
+        
+        
+        tr+="</tr>";
+        t += tr;  
+       }
+      
+      }
+    tabl.innerHTML += t;
+    butt1 = document.getElementById('butt1');
+    butt1.dataset.target = "#myModal"
+}
+function process_data(){
+    var monday;var tuesday; var wednesday;var thursday;var friday; var mem2;
+        var tmp_lst = new Array()
+        monday = new Map();
+        tuesday = new Map();
+        wednesday = new Map();
+        thursday = new Map();
+        friday = new Map();
+        var ms = 0;
+        var boo = new Array('tof',monday,tuesday,wednesday,thursday,friday)
+        var whole = new Map();
+        mem2 = new Array('foo','course','school','period','time')
+        
+        
+        //const collection = document.getElementsByClassName('mc')
+        function call_for_strip(stng){
+          var foo = 1;
+          ms++
+          //console.log(stng+ 'in clal to strip')
+        
+        for(foo; foo<=5;foo++){
+          // //console.log(stng+foo.toString())
+            make_clean(stng+foo.toString(), foo, boo[ms])
+            //monday.push([mem.getElementsByTagName('select'),mem.getElementsByTagName('input')])
+        }
+      }
+      
+
+        function make_clean(arg, stat, dc){
+         
+          for(bar=1; bar<5;bar++){
+            // //console.log(arg+'_'+mem2[bar])
+            if(document.getElementById(arg+'_'+mem2[bar]).value){
+            tmp_lst.push(document.getElementById(arg+'_'+mem2[bar]).value)
+            }
+          }
+          
+          //console.log('period_'+stat.toString() + 'the error here')
+          // console.log(dc)
+          
+          try{
+            dc['period_'+stat.toString()] = tmp_lst
+            whole['day '+ms.toString()] = dc
+          }catch(err){
+            console.log(dc)
+          console.log(ms)
+          }
+            
+
+        
+          // //console.log(tmp_lst)
+          
+          // console.log(whole)
+         
+          tmp_lst = new Array()
+         
+        }
+        var data = [
+          'mp',
+          'tp',
+          'wp',
+          'thp',
+          'fp'
+        ]
+      data.forEach(function(entry){
+        //console.log(entry)
+        call_for_strip(entry)
+      });
+    
+    // return JSON.stringify(whole);  
+    return whole
+  };
+
+$(function () {
+ 
+    //Initialize Select2 Elements
+    $(document).on('submit','#time_table',function(e){
+      document.querySelector("#crtbut").disabled = true;
+      //console.log('preventing default')
+        e.preventDefault();
+        
+      var obj = JSON.stringify(process_data())
+      
+      
+      $.ajax({
+          url:'{% url 'save_personal_timetable' %}',
+          method:'POST',
+          data:{
+            'content': obj,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            
+          },
+          success: function(resp){
+            window.location.href = "{% url 'staff_home' %}"
+          }
+      
+        })
+        ////console.log(monday)
+        // strip_cont(monday)
+        //monday.forEach(function(mon){
+          //var lgn = mon.length;
+          //for ( mo=0; mo < lgn ; mo++ ){
+            //mon.forEach(function(foo){
+            
+              //if(foo != null && foo[mo].tagName == 'SELECT'){
+                ////console.log(foo[mo])
+              //}
+              //else{
+               // //console.log('not foo')
+              //}
+              ////console.log(foo[mo].tagName)
+            //})
+            ////console.log(mo)
+            
+         //}
+          ////console.log(mon[0].tagName)
+        //})
+  
+     
+    });
+   
+    //Date range picker
+    
+    //Date range as a button
+    
+
+  
+
+    //Bootstrap Duallistbox
+ 
+    //Colorpicker
+
+
+
+  })
+  
+</script>
+{% endblock custom_js %}
+
+ 

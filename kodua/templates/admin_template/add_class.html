@@ -1,0 +1,153 @@
+
+{% extends 'admin_template/base_template.html' %}
+{% block page_title %}
+Add Class
+{% endblock page_title %}
+{% block main_content %}
+
+  <section class="content">
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-2">
+
+          </div>
+            <div class="col-md-8">
+          <!-- general form elements -->
+          <div class="card card-primary" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);">
+            <div class="card-header">
+              <h3 class="card-title">Add Class</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form id="post_form">
+                {% csrf_token %}
+             
+
+              <div class="card-body">
+                
+               
+                 <div class="form-group">
+                  <label>Select Department:</label>
+                  <select class="form-control" id="department" name="course">
+                      {% for department in departments %}
+                        <option value="{{ department.department_name }}">{{ department.department_name }}</option>
+                      {% endfor %}
+                  </select>
+                </div>
+                <div id="msg_ins" class="form-group">
+                  <label>Select Form:</label>
+                  <select class="form-control" id="form" name="staff">
+                      {% for form in forms %}
+                        <option value="{{ form }}"> {{ form }} </option>
+                      {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group" >
+                  <label>Class Name:</label>
+                  <input disabled type="text" class="form-control" id="c_name" name="class_name" placeholder="Enter Index here">
+                </div>
+                <div class="form-group">
+                  <label>Prefect ID:</label>
+                  <input type="text" class="form-control" required  id="prefect_id" placeholder="Enter Index here">
+                </div>
+                 <div id="msg_cls" class="form-group">
+                    {% if messages %}
+                      {% for message in messages %}
+                      {% if message.tags == 'error' %}
+                      <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                      {% endif %}
+                      {% if message.tags == 'success' %}
+                      <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                      {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                  </div>
+
+              </div>
+              <!-- /.card-body -->
+
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary btn-block">Add Class</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.card -->
+
+
+
+        </div>
+        </div>
+    </div>
+  </section>
+  {% endblock %}
+
+
+  {% block custom_js %}
+<script>
+   $(document).ready(function(){
+    dep = document.getElementById('department').value 
+         form = document.getElementById('form').value
+        var clas = document.getElementById('c_name')
+        clas.value = dep + ' ' + form
+       $('#form').bind("change keyup", function(event){
+         var dep, form;
+         dep = document.getElementById('department').value 
+         form = document.getElementById('form').value
+        var clas = document.getElementById('c_name')
+        clas.value = dep + ' ' + form
+        console.log('event changed')
+        console.log(event)
+
+       })
+       $('#department').bind("change keyup", function(event){
+         var dep, form;
+         dep = document.getElementById('department').value 
+         form = document.getElementById('form').value
+        var clas = document.getElementById('c_name')
+        clas.value = dep + ' ' + form
+        console.log('event changed')
+        console.log(event)
+
+       })
+      // var dep, form, clas;
+      // dep = document.getElementById('department')
+      // form = document.getElementById('form')
+      // clas = document.getElementById("c_name");
+      // clas.innerHTML = dep.value + ' ' + form.value
+      $(document).on('submit','#post_form',function(e){
+      //console.log('preventing default')
+        e.preventDefault();
+        var dep, form;
+         dep = document.getElementById('department').value 
+         form = document.getElementById('form').value
+        var clas = document.getElementById('c_name').value
+        var prefect = document.getElementById('prefect_id').value
+        $.ajax({
+          
+          url:'{% url 'check_class_exist' %}',
+          method:'POST',
+          data:{
+            'data': dep,form,clas,prefect,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            
+          },
+          success: function(resp){
+            //do nothing
+            if (resp == 'error'){
+              alert('A class with the '+clas+' already exist in the system, please check and try again.')
+            }
+            else if (resp == 'error1'){
+              alert('A prefect with the Unique ID "'+ prefect +'" is already registered')
+            }
+            else if (resp == 'error2') {
+              alert("Classes Do not Corelate, Check and Try again")
+            }
+            else{location.reload()}
+          }
+        })
+      })
+ 
+ 
+ })
+</script>
+{% endblock %}
